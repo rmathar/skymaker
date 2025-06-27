@@ -1,3 +1,6 @@
+#pragma once
+
+#include <math.h>
 /*
 *				define.h
 *
@@ -49,14 +52,17 @@
 #define		BIG		1e+30		/* a huge number */
 #define		SMALL		(1/BIG)		/* A very small number */
 #define		MAXCHAR		1024		/* max. number of characters */
-#ifndef PI
-#define PI	3.1415926535898			/* never met before? */
+#ifndef M_PI
+#define M_PI	3.1415926535898			/* never met before? */
+#endif
+#ifndef M_PI_2f
+#define M_PI_2f	1.57079632679489661923f
 #endif
 #define C               2.9979250e8             /* speed of light in MKS */
 #define	PSF_NORDER	15			/* Max size = 2^15 */
 
 /*----------------------------- Unit conversions ----------------------------*/
-#define	DEG		(PI/180.0)		/* one degree in rad */
+#define	DEG		(M_PI/180.0)		/* one degree in rad */
 #define	ARCSEC		(DEG/3600.0)		/* one arsec in rad */
 #define	MICRON		1e-6			/* one micron in MKS */
 #define	MM		1e-3			/* one mm in MKS */
@@ -98,8 +104,18 @@
 
 /*------------------------------- Other Macros -----------------------------*/
 
+#ifdef _GNU_SOURCE
+#define	DEXP(x)		exp10(x)		/* 10^x */
+#define	DEXPF(x)	exp10f(x)	/* 10^x */
+#else
+#ifdef __USE_GNU
+#define	DEXP(x)		exp(M_LN10*(x))		/* 10^x */
+#define	DEXPF(x)	expf(M_LN10f*(x))	/* 10^x */
+#else
 #define	DEXP(x)		exp(2.30258509299*(x))		/* 10^x */
 #define	DEXPF(x)	expf(2.30258509299f*(x))	/* 10^x */
+#endif
+#endif
 
 #define QFREAD(ptr, size, afile, fname) \
 		if (fread(ptr, (size_t)(size), (size_t)1, afile)!=1) \

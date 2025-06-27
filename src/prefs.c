@@ -406,7 +406,7 @@ int	cistrcmp(char *cs, char *ct, int mode)
 /*
 Update various structures according to the prefs.
 */
-void	useprefs(void)
+void	useprefs()
 
   {
    char		str[MAXCHAR], *end;
@@ -414,7 +414,6 @@ void	useprefs(void)
    extern int	__intel_cpu_indicator;
    unsigned int	eax, ebx, ecx, edx;
 #endif
-   unsigned short       ashort=1;
 #ifdef USE_THREADS
    int                  nproc;
 #endif
@@ -534,16 +533,3 @@ void	useprefs(void)
 
   return;
   }
-
-
-/********************************* endprefs *********************************/
-/*
-Mostly free memory allocate for static arrays.
-*/
-void	endprefs(void)
-
-  {
-
-  return;
-  }
-

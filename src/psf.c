@@ -67,7 +67,7 @@ void	makepsf(simstruct *sim)
 		*polyast00,*polyast45,*polytri00,*polytri30,
 		*polyqua00,*polyqua22;
    char		str[64];
-   PIXTYPE	*bmp,*bmp2, *pix,*pix2, *bmpc,
+   PIXTYPE	*bmp,*bmp2, *pix,*pix2, *bmpc = NULL,
 		invnorm;
    double	pixscale[2], fsize[2], fscale[2], redscale[2],step[2],pstep[2],
  		psfc[2],psfct[2],
@@ -105,7 +105,7 @@ void	makepsf(simstruct *sim)
 /* A rough estimate of the PSF area (at 1 sigma), including all the */
 /* contributions */
 /* 1.8 ~ sqrt(2*ln(5)) */
-  sim->psfarea = PI*(
+  sim->psfarea = M_PI*(
 		 1.22*1.22/(2.35*2.35)
 			*sim->lambdaeq*sim->lambdaeq/(sim->psfdm1*sim->psfdm1)
 		+sim->seeing*sim->seeing/(2.35*2.35)
@@ -156,7 +156,7 @@ void	makepsf(simstruct *sim)
    Set-up parameters in the configuration file corresponds to d80%, which is
    roughly FWHM for a gaussian. */
 /* Original formula (EB)
-   phidefoc   = PI*sim->psfdefocfwhm*ARCSEC*fwscale*fwscale
+   phidefoc   = M_PI*sim->psfdefocfwhm*ARCSEC*fwscale*fwscale
 	       /(sim->psfdm1*sim->lambdaeq*MICRON);
 */
   group[0] = group[1] = 1;
@@ -171,7 +171,7 @@ void	makepsf(simstruct *sim)
   polytri30 = poly_init(group, 2, &dim, 1);
   polyqua00 = poly_init(group, 2, &dim, 1);
   polyqua22 = poly_init(group, 2, &dim, 1);
-  pupilnorm = PI*sim->psfdm1/(sim->lambdaeq*MICRON)*ARCSEC;
+  pupilnorm = M_PI*sim->psfdm1/(sim->lambdaeq*MICRON)*ARCSEC;
   sim->npsf = 1;
   for (o=0; o<PSF_NVARORDER; o++)
     {
@@ -440,8 +440,8 @@ void	makepsf(simstruct *sim)
     if (sim->psftracktype!=NO_TRACKERR && (sim->psftrackmaj || sim->psftrackmin))
       {
       trackflag = 1;
-      a2 = 2*PI*sim->psftrackmaj/(psfsize[0]*pixscale[0]);
-      b2 = 2*PI*sim->psftrackmin/(psfsize[0]*pixscale[0]);
+      a2 = 2*M_PI*sim->psftrackmaj/(psfsize[0]*pixscale[0]);
+      b2 = 2*M_PI*sim->psftrackmin/(psfsize[0]*pixscale[0]);
       ct = cos(sim->psftrackang*DEG);
       st = sin(sim->psftrackang*DEG);
       switch(sim->psftracktype)
@@ -601,7 +601,7 @@ void	makepsf(simstruct *sim)
     if (rmax<1.0)
       rmax = 1.0;
     rmax2 = rmax*rmax;
-    rsig = sqrt(sim->psfarea/PI)*osamp;
+    rsig = sqrt(sim->psfarea/M_PI)*osamp;
     invrsig2 = 1/(2*rsig*rsig);
     rmin = rmax - (3*rsig);	/* 3 sigma annulus (almost no aliasing) */
     rmin2 = rmin*rmin;
@@ -768,8 +768,7 @@ void	makepsf(simstruct *sim)
   QCALLOC(sim->psfdpos[0], double, sim->npsf);
   QCALLOC(sim->psfdpos[1], double, sim->npsf);
 
-  return;
-  }
+  } /* makepsf */
 
 
 /******************************** center_psf *********************************/
@@ -781,7 +780,7 @@ void    center_psf(simstruct *sim)
    double	dx,dy, dxmax,dymax, flux;
    PIXTYPE	*pix,
 		val, max;
-   int		p, ix,iy, ixmax,iymax, nbpix;
+   int		p, ix=0,iy=0, ixmax=0,iymax=0, nbpix;
 
   switch(prefs.psfcentertype)
     {
@@ -894,8 +893,7 @@ void    center_psf(simstruct *sim)
 		"centerpsf()");
     }
 
-  return;
-  }
+  } /* center_psf */
 
 
 /********************************* makeaureole *******************************/
@@ -954,8 +952,8 @@ void	makeaureole(simstruct *sim)
     error(EXIT_FAILURE, "*Internal ERROR*: bad aureole normalization in ",
 	"makeaureole()");
 
-  return;
-  }
+  } /* makeaureole */
+
 
 
 /****** pos_to_indices *******************************************************
@@ -1168,7 +1166,7 @@ PIXTYPE	*interp_dft(simstruct *sim, int order, double *pos, double *dpos)
     if (rmax<1.0)
       rmax = 1.0;
     rmax2 = rmax*rmax;
-    rsig = sqrt(sim->psfarea/PI)*sim->psfoversamp;
+    rsig = sqrt(sim->psfarea/M_PI)*sim->psfoversamp;
     invrsig2 = 1/(2*rsig*rsig);
     rmin = rmax - (3*rsig);	/* 3 sigma annulus (almost no aliasing) */
     rmin2 = rmin*rmin;
@@ -1244,10 +1242,9 @@ Free allocated memory for the PSF.
 void    freepsf(simstruct *sim)
 
   {
-   int	p;
 
   free(sim->psf);
-  for (p=0; p<(PSF_NORDER+1)*sim->npsf; p++)
+  for (int p=0; p<(PSF_NORDER+1)*sim->npsf; p++)
     {
     QFFTWF_FREE(sim->psfdft[p]);
     }
@@ -1256,7 +1253,7 @@ void    freepsf(simstruct *sim)
 #ifdef USE_THREADS
   if (dftmutex)
     {
-    for (p=0; p<sim->npsf; p++)
+    for (int p=0; p<sim->npsf; p++)
       QPTHREAD_MUTEX_DESTROY(&dftmutex[p]);
     free(dftmutex);
     }
@@ -1264,7 +1261,6 @@ void    freepsf(simstruct *sim)
   free(sim->psfdpos[0]);
   free(sim->psfdpos[1]);
 
-  return;
   }
 
 
@@ -1378,7 +1374,4 @@ void	readpsf(simstruct *sim)
   sim->psfarea = areamax * sim->pixscale[0]*sim->pixscale[1]
 	/ (sim->psfoversamp*sim->psfoversamp);
 
-  return;
-  }
-
-
+  } /* readpsf */

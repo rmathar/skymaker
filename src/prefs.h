@@ -1,3 +1,4 @@
+#pragma once
 /*
 *				prefs.h
 *
@@ -26,24 +27,13 @@
 *
 *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
-#ifndef _PSF_H_
 #include "psf.h"
-#endif
 
-#ifndef _LIST_H_
 #include "list.h"
-#endif
 
-#ifndef _SIMUL_H_
 #include "simul.h"
-#endif
 
-#ifndef _WEIGHT_H_
 #include "weight.h"
-#endif
-
-#ifndef _PREFS_H_
-#define _PREFS_H_
 
 //----------------------------- Internal constants --------------------------
 
@@ -175,8 +165,5 @@ extern prefstruct	prefs;
 extern int	cistrcmp(char *cs, char *ct, int mode);
 
 extern void	dumpprefs(int state),
-		endprefs(void),
 		readprefs(char *filename,char **argkey,char **argval,int narg),
 		useprefs(void);
-
-#endif

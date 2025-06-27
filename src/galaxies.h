@@ -1,3 +1,4 @@
+#pragma once
 /*
 *				galaxies.h
 *
@@ -26,13 +27,9 @@
 *
 *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
-#ifndef _SIMUL_H_
 #include "simul.h"
-#endif
 
-#ifndef _LIST_H_
 #include "list.h"
-#endif
 
 /*---------------------------- Internal constants ---------------------------*/
 #define	SERSIC_SMOOTHR	4.0	/* Profile smoothing radius (pixels) */

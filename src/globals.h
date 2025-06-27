@@ -1,3 +1,4 @@
+#pragma once
 /*
 *				globals.h
 *
@@ -26,12 +27,8 @@
 *
 *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
-#include "types.h"
-
 /*----------------------- miscellaneous variables ---------------------------*/
 extern char		gstr[MAXCHAR];
 
 /*------------------------------- functions ---------------------------------*/
 extern void	makeit(void);
-extern double	counter_seconds(void);
-

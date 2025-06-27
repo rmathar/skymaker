@@ -497,7 +497,7 @@ static void	image_make_kernel(float pos, float *kernel,
       *(kernel++) = 0.0f;
       *kernel = 0.0f;
     } else {
-      x = -PI/2.0f*(pos+1.0f);
+      x = -M_PI_2f*(pos+1.0f);
 #ifdef HAVE_SINCOSF
       sincosf(x, &sinx1, &cosx1);
 #else
@@ -505,11 +505,11 @@ static void	image_make_kernel(float pos, float *kernel,
       cosx1 = cosf(x);
 #endif
       val = (*(kernel++) = sinx1/(x*x));
-      x += PI/2.0f;
+      x += M_PI_2f;
       val += (*(kernel++) = -cosx1/(x*x));
-      x += PI/2.0f;
+      x += M_PI_2f;
       val += (*(kernel++) = -sinx1/(x*x));
-      x += PI/2.0f;
+      x += M_PI_2f;
       val += (*kernel = cosx1/(x*x));
       val = 1.0f/val;
       *(kernel--) *= val;
@@ -526,7 +526,7 @@ static void	image_make_kernel(float pos, float *kernel,
       *(kernel++) = 0.0f;
       *kernel = 0.0f;
     } else {
-      x = -PI/3.0f*(pos+2.0f);
+      x = -M_PI/3.0f*(pos+2.0f);
 #ifdef HAVE_SINCOSF
       sincosf(x, &sinx1, &cosx1);
 #else
@@ -534,17 +534,17 @@ static void	image_make_kernel(float pos, float *kernel,
       cosx1 = cosf(x);
 #endif
       val = (*(kernel++) = sinx1/(x*x));
-      x += PI/3.0f;
+      x += M_PI/3.0f;
       val += (*(kernel++) = (sinx2=-0.5f*sinx1-0.866025403785f*cosx1)
 				/ (x*x));
-      x += PI/3.0f;
+      x += M_PI/3.0f;
       val += (*(kernel++) = (sinx3=-0.5f*sinx1+0.866025403785f*cosx1)
 				/(x*x));
-      x += PI/3.0f;
+      x += M_PI/3.0f;
       val += (*(kernel++) = sinx1/(x*x));
-      x += PI/3.0f;
+      x += M_PI/3.0f;
       val += (*(kernel++) = sinx2/(x*x));
-      x += PI/3.0f;
+      x += M_PI/3.0f;
       val += (*kernel = sinx3/(x*x));
       val = 1.0f/val;
       *(kernel--) *= val;
@@ -565,7 +565,7 @@ static void	image_make_kernel(float pos, float *kernel,
       *(kernel++) = 0.0f;
       *kernel = 0.0f;
     } else {
-      x = -PI/4.0f*(pos+3.0f);
+      x = -M_PI/4.0f*(pos+3.0f);
 #ifdef HAVE_SINCOSF
       sincosf(x, &sinx1, &cosx1);
 #else
@@ -573,20 +573,20 @@ static void	image_make_kernel(float pos, float *kernel,
       cosx1 = cosf(x);
 #endif
       val = (*(kernel++) = sinx1/(x*x));
-      x += PI/4.0f;
+      x += M_PI/4.0f;
       val +=(*(kernel++) = -(sinx2=0.707106781186f*(sinx1+cosx1))
 				/(x*x));
-      x += PI/4.0f;
+      x += M_PI/4.0f;
       val += (*(kernel++) = cosx1/(x*x));
-      x += PI/4.0f;
+      x += M_PI/4.0f;
       val += (*(kernel++) = -(sinx3=0.707106781186f*(cosx1-sinx1))/(x*x));
-      x += PI/4.0f;
+      x += M_PI/4.0f;
       val += (*(kernel++) = -sinx1/(x*x));
-      x += PI/4.0f;
+      x += M_PI/4.0f;
       val += (*(kernel++) = sinx2/(x*x));
-      x += PI/4.0f;
+      x += M_PI/4.0f;
       val += (*(kernel++) = -cosx1/(x*x));
-      x += PI/4.0f;
+      x += M_PI/4.0f;
       val += (*kernel = sinx3/(x*x));
       val = 1.0f/val;
       *(kernel--) *= val;
@@ -602,7 +602,6 @@ static void	image_make_kernel(float pos, float *kernel,
     error(EXIT_FAILURE, "*Internal Error*: Unknown interpolation type in ",
 		"make_kernel()");
 
-  return;
-}
+} /* image_make_kernel */
 
 

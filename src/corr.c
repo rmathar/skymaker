@@ -50,7 +50,6 @@
 #endif
 
 #include "define.h"
-#include "types.h"
 #include "globals.h"
 #include "prefs.h"
 #include "corr.h"
@@ -117,7 +116,7 @@ VERSION	04/05/2017
 void	corr_convline(simstruct *sim, PIXTYPE *imagein, PIXTYPE *imageout,
 		int y) {
 
-   int		mw,mw2,m0,me,m,mx,dmx, y0, dy, sw,sh;
+   int		mw,mw2,m0,me,m,mx,dmx, y0, dy, sw;
    PIXTYPE	*corrline, *corrlinee, *corr,
 		*s,*s0, *d,*de, mval;
 
@@ -276,7 +275,7 @@ PIXTYPE corr_func_lanczos2(float x) {
   if (x < 1e-5f)
     return 1.0f;
   else if (x < 2.0f) {
-    x *= PI;
+    x *= M_PI;
     return 2.0f * sinf(x) * sinf(0.5f * x) / (x * x);
   } else
     return 0.0f;
@@ -299,7 +298,7 @@ PIXTYPE corr_func_lanczos3(float x) {
   if (x < 1e-5f)
     return 1.0f;
   else if (x < 3.0f) {
-    x *= PI;
+    x *= M_PI;
     return 3.0f * sinf(x) * sinf(0.333333f * x) / (x * x);
   } else
     return 0.0f;
@@ -322,7 +321,7 @@ PIXTYPE corr_func_lanczos4(float x) {
   if (x < 1e-5f)
     return 1.0f;
   else if (x < 4.0f) {
-    x *= PI;
+    x *= M_PI;
     return 4.0f * sinf(x) * sinf(0.25f * x) / (x * x);
   } else
     return 0.0f;

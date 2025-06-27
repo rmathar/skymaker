@@ -81,7 +81,7 @@ int	make_galaxy(simstruct *sim, objstruct *obj)
 		invflux, invbflux;
    double	dpos[2],
 		osamp, dratio, bsize,size,
-		bflux, flux, flux2, dx,dy, beq, dscale,expo, n, bn, ampfac, dval;
+		flux, flux2, dx,dy, beq, dscale,expo, n, bn, ampfac, dval;
    int		i, subwidth,subheight, suborder,
 		nsub,nsub2,nsubo,memnsub;
 
@@ -114,7 +114,7 @@ int	make_galaxy(simstruct *sim, objstruct *obj)
     n = obj->bulge_sersicn;
     bn = 2.0*n - 1.0/3.0 + 4.0/(405.0*n) + 46.0/(25515.0*n*n)
 	+ 131.0/(1148175*n*n*n);        /* Ciotti & Bertin 1999 */
-    ampfac = pow(bn, 2*n) / (PI * gamm(2*n+1));
+    ampfac = pow(bn, 2*n) / (M_PI * gamm(2*n+1));
     bsize = log(obj->bulge_ratio*obj->flux*ampfac
 		/(obj->bulge_aspect*beq*sim->minquant))/bn;
     size = bsize = bsize>0.0 ? beq*pow(bsize, n) : 0.0;
@@ -144,7 +144,7 @@ int	make_galaxy(simstruct *sim, objstruct *obj)
 
 /*-- Estimate the maximum extent of the disk */
     size = dscale*log(dratio*obj->flux
-		/(2*PI*obj->disk_aspect*dscale*sim->minquant));
+		/(2*M_PI*obj->disk_aspect*dscale*sim->minquant));
     if (size<0.0)
       size = 0.0;
 /*-- Don't go beyond van der Kruit cut-off */
@@ -409,7 +409,7 @@ double	raster_sersic(simstruct *sim, objstruct *obj,
   a21 = (float) (-lin[2] * dinvdet);
   a22 = (float) (lin[0] * dinvdet);
   nang = 72 / 2;	/* 72 angles; only half of them are computed*/
-  angstep = PI/nang;
+  angstep = M_PI/nang;
   ang = 0.0;
   for (a=0; a<nang; a++)
     {

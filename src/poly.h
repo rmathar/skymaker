@@ -1,3 +1,4 @@
+#pragma once
 /*
 *				poly.h
 *
@@ -26,9 +27,6 @@
 *	Last modified:		12/10/2010
 *
 *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
-
-#ifndef _POLY_H_
-#define _POLY_H_
 
 /*--------------------------------- constants -------------------------------*/
 
@@ -78,6 +76,3 @@ extern double		*poly_deortho(polystruct *poly, double *datain,
 extern void		poly_initortho(polystruct *poly, double *data,
 				int ndata);
 #endif
-
-#endif
-

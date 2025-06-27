@@ -79,14 +79,16 @@ void	makestarfield(simstruct *sim)
   {
    char			str[MAXCHAR];
    double		xrange,yrange, dnstars;
-   int			nstars, step, gridflag;
+   int			nstars;
 #ifndef USE_THREADS
    static objstruct	obj={0};
-   int			i, gridindex, ngrid;
+   int			i, gridindex, ngrid, step, gridflag;
 #endif
 
   init_random(sim->starposseed);
+#ifndef USE_THREADS
   gridflag = (sim->imatype==GRID || sim->imatype==GRID_NONOISE);
+#endif
   xrange = sim->fimasize[0]-1.0;
   yrange = sim->fimasize[1]-1.0;
   dnstars = sim->pixscale[0]*sim->pixscale[1] / (sim->mscan[0]*sim->mscan[1])
@@ -101,13 +103,13 @@ void	makestarfield(simstruct *sim)
     }
   sprintf(str, "Adding %d stars...", nstars);
   NFPRINTF(OUTPUT, str);
-/*- rough estimate of computing time necessary between each announcement */
-  step = (int)(5000000.0*sim->psfoversamp*sim->psfoversamp)
-	/(sim->psfsize[0]*sim->psfsize[1]*sim->mscan[0]*sim->mscan[1]);
 
 #ifdef USE_THREADS
   pthread_makestarfield(sim, nstars);
 #else
+/*- rough estimate of computing time necessary between each announcement */
+  step = (int)(5000000.0*sim->psfoversamp*sim->psfoversamp)
+	/(sim->psfsize[0]*sim->psfsize[1]*sim->mscan[0]*sim->mscan[1]);
 /* Let's initialize some object parameters */
   obj.flux = 0.0;
   obj.type = 100;

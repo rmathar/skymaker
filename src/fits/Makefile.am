@@ -29,6 +29,7 @@
 
 noinst_LIBRARIES	= libfits.a
 libfits_a_SOURCES	= fitsbody.c fitscat.c fitscheck.c fitscleanup.c \
-			  fitsconv.c fitshead.c fitskey.c fitsmisc.c \
+			  fitshead.c fitskey.c fitsmisc.c \
 			  fitsread.c fitstab.c fitsutil.c fitswrite.c \
 			  fitscat_defs.h fitscat.h
+libfits_a_CFLAGS = $(AM_CFLAGS)

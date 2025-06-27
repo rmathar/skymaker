@@ -77,33 +77,6 @@ int	add_key(keystruct *key, tabstruct *tab, int pos)
   }
 
 
-/****** blank_keys *************************************************************
-PROTO	int blank_keys(tabstruct *tab)
-PURPOSE	Put the array pointers from all keys in a table to NULL.
-INPUT	Pointer to the table.
-OUTPUT	RETURN_OK if keys were found, and RETURN_ERROR otherwise.
-Notes:	-.
-AUTHOR	E. Bertin (IAP & Leiden observatory)
-VERSION	25/04/97
- ***/
-int	blank_keys(tabstruct *tab)
-
-  {
-   keystruct	*key;
-   int		k;
-
-  if (!(key = tab->key))
-    return RETURN_ERROR;
-
-  for (k=tab->nkey; k--;)
-    {
-    key->ptr = NULL;
-    key = key->nextkey;
-    }
-
-  return RETURN_OK;
-  }
-
 
 /****** copy_key ***************************************************************
 PROTO	int copy_key(tabstruct *tabin, char *keyname, tabstruct *tabout, int pos)

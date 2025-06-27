@@ -1,3 +1,4 @@
+#pragma once
 /*
 *				preflist.h
 *
@@ -32,9 +33,7 @@
 
 #include "key.h"
 
-#ifndef _PREFS_H_
 #include "prefs.h"
-#endif
 
 #ifdef	USE_THREADS
 #define	THREADS_PREFMAX THREADS_NMAX

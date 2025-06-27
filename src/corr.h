@@ -1,3 +1,4 @@
+#pragma once
 /*
 *				corr.h
 *
@@ -26,9 +27,7 @@
 *
 *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
-#ifndef _SIMUL_H_
 #include "simul.h"
-#endif
 
 /*---------------------------- Internal constants --------------------------*/
 #define	CORRFUNC_STEP		0.01	/* Corr. function integration step */

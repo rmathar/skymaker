@@ -101,6 +101,10 @@ simstruct	*sim_init(void)
     sim->gridindex = 0;
     }
   else
+    /* set the flag if the configure value in LIST_COORDTYPE of 
+    * the sky.conf file is not the LISTCOORD_PIXEL of src/list.h
+    * Keeping the wcsflag=0 means the wcslib is never actually used!
+    */
     sim->wcsflag = (prefs.listcoord_type != LISTCOORD_PIXEL);
 
   sim->cat = imaout_inithead(sim);

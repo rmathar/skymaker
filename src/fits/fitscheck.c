@@ -89,60 +89,6 @@ void	encode_checksum(unsigned int sum, char *str)
   }
 
 
-/****** decode_checksum *****************************************************
-PROTO	unsigned int decode_checksum(char *str)
-PURPOSE	Decode an ASCII checksum
-INPUT	Checksum string.
-OUTPUT	Checksum.
-NOTES	Straightforward copy of  Seaman & Pence 1995
-	(ftp://iraf.noao.edu/misc/checksum/).
-AUTHOR	E. Bertin (IAP)
-VERSION	11/02/2020
- ***/
-unsigned int	decode_checksum(char *str)
-
-  {
-   char			cbuf[16];
-   unsigned short	*sbuf,
-			los,his,
-			ashort = 1;
-   unsigned int		hi,lo, hicarry,locarry;
-   int			i;
-
-/* Remove the permuted FITS byte alignment and the ASCII 0 offset */
-  for (i=0; i<16; i++)
-    cbuf[i] = str[(i+1)%16] - 0x30;
-  sbuf = (unsigned short *)cbuf;
-  hi = lo = 0;
-  if (*((char *)&ashort))	// Byte-swapping required
-    for (i=4; i--;)
-      {
-      his = *(sbuf++);
-      los = *(sbuf++);
-      hi += (*((unsigned char *)&his)<<8) + *((unsigned char *)&his+1);
-      lo += (*((unsigned char *)&los)<<8) + *((unsigned char *)&los+1);
-      }
-  else
-    for (i=4; i--;)
-      {
-      hi += *(sbuf++);
-      lo += *(sbuf++);
-      }
-
-  hicarry = hi>>16;
-  locarry = lo>>16;
-  while (hicarry || locarry)
-    {
-    hi = (hi & 0xffff) + locarry;
-    lo = (lo & 0xffff) + hicarry;
-    hicarry = hi >> 16;
-    locarry = lo >> 16;
-    }
-
-  return (hi<<16) + lo;
-  }
-
-
 /****** compute_blocksum *****************************************************
 PROTO	unsigned int compute_blocksum(char *buf, unsigned int sum)
 PURPOSE	Compute the checksum of a FITS block (2880 bytes)

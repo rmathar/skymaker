@@ -48,7 +48,7 @@ NOTES	Any preexisting file with name filename is overwritten.
 AUTHOR	E. Bertin (IAP)
 VERSION	09/09/2003
  ***/
-void	save_cat(catstruct *cat, char *filename)
+void	save_cat(catstruct *cat, char *filename, struct wcsprm *wcs)
 
   {
    tabstruct	*tab;
@@ -68,14 +68,14 @@ void	save_cat(catstruct *cat, char *filename)
     else
       prim_head(tab);
     save_tab(cat, tab);
-    while (!((tab=tab->nexttab)->nseg));
+    while (!((tab=tab->nexttab)->nseg))
+       ;
     }
 
   if (close_cat(cat) != RETURN_OK)
     error(EXIT_FAILURE, "*Error*: Problem while closing", cat->filename);
 
-  return;
-  }
+  } /* save_cat */
 
 
 /****** save_tab **************************************************************
@@ -210,8 +210,7 @@ void	save_tab(catstruct *cat, tabstruct *tab)
 /* FITS padding*/
   pad_tab(cat, tabsize);
 
-  return;
-  }
+  } /* save_tab */
 
 
 /****** save_head *************************************************************
@@ -228,6 +227,7 @@ int	save_head(catstruct *cat, tabstruct *tab)
 
   {
    int		tabflag;
+
 
 /*  Make the table parameters reflect its content*/
   update_tab(tab);
@@ -266,292 +266,3 @@ int pad_tab(catstruct *cat, KINGSIZE_T size)
   }
 
 
-/****** init_writeobj *********************************************************
-PROTO	void init_writeobj(catstruct *cat, tabstruct *tab, char **pbuf)
-PURPOSE	Prepare the writing of individual sources in a FITS table
-INPUT	catalog structure,
-	table structure,
-	pointer to an array pointer to be used as a temporary buffer.
-OUTPUT	-.
-NOTES	-.
-AUTHOR	E. Bertin (IAP & Leiden observatory)
-VERSION	02/11/2009
- ***/
-void	init_writeobj(catstruct *cat, tabstruct *tab, char **pbuf)
-
-  {
-   keystruct	*key;
-   int		k;
-
-/* The header itself */
-  if (save_head(cat, tab) != RETURN_OK)
-    error(EXIT_FAILURE, "*Error*: Not a binary table: ", tab->extname);
-
-/* Store the current position */
-  QFTELL(cat->file, tab->bodypos, cat->filename);
-
-/* Allocate memory for the output buffer */
-  QMALLOC(*pbuf, char, tab->naxisn[0]);
-
-/* Scan keys to check that memory has been allocated */
-  key = tab->key;
-  for (k=tab->nkey; k--; key = key->nextkey)
-    if (!key->ptr)
-      error(EXIT_FAILURE, "*Error*: no memory allocated for ", key->name);
-
-/* No object written yet: initialize counter */
-  tab->naxisn[1] = 0;
-
-  return;
-  }
-
-
-/****** write_obj *************************************************************
-PROTO	int write_obj(tabstruct *tab, char *buf)
-PURPOSE	Write one individual source in a FITS table
-INPUT	Table structure,
-	pointer to the temporary buffer.
-OUTPUT	-.
-NOTES	key content is destroyed (actually, byte-swapped) on output.
-AUTHOR	E. Bertin (IAP)
-VERSION	11/02/2020
- ***/
-int	write_obj(tabstruct *tab, char *buf)
-
-  {
-   catstruct		*cat;
-   keystruct		*key;
-   char  	       *pin, *pout, *pout2;
-   unsigned short	ashort = 1;
-   int          	b, k, esize, bswapflag;
-
-  bswapflag = *((char *)&ashort);	// Byte-swapping flag
-  key = tab->key;
-  cat = tab->cat;
-  pout = buf;
-  for (k=tab->nkey; k--; key = key->nextkey)
-    {
-    pin = key->ptr;
-    pout2 = pout;
-    for (b=key->nbytes; b--;)
-      *(pout++) = *(pin++);
-    if (bswapflag)
-      {
-      esize = t_size[key->ttype];
-      swapbytes(pout2, esize, key->nbytes/esize);
-      }
-    }
-
-  QFWRITE(buf, *tab->naxisn, cat->file, cat->filename);
-
-  return ++tab->naxisn[1];
-  }
-
-
-/****** end_writeobj **********************************************************
-PROTO	void end_writeobj(catstruct *cat, tabstruct *tab, char *buf)
-PURPOSE	End the writing of individual sources in a FITS table
-INPUT	catalog structure,
-	table structure,
-	pointer to the temporary buffer.
-OUTPUT	-.
-NOTES	-.
-AUTHOR	E. Bertin (IAP & Leiden observatory)
-VERSION	03/12/2019
- ***/
-void	end_writeobj(catstruct *cat, tabstruct *tab, char *buf)
-
-  {
-   keystruct	*key;
-   OFF_T2	pos;
-   int		k;
-
-/* Make the table parameters reflect its content*/
-  key = tab->key;
-  for (k=tab->nkey; k--; key = key->nextkey)
-    key->nobj = tab->naxisn[1];
-  update_tab(tab);
-/* The header itself */
-  if (update_head(tab) != RETURN_OK)
-    error(EXIT_FAILURE, "*Error*: Not a binary table: ", tab->extname);
-
-/*--FITS padding*/
-  pad_tab(cat, tab->tabsize);
-  pos = ftell(cat->file);
-  QFTELL(cat->file, pos, cat->filename);
-  QFSEEK(cat->file, tab->headpos, SEEK_SET, cat->filename);
-  QFWRITE(tab->headbuf, FBSIZE*tab->headnblock, cat->file, cat->filename);
-  QFSEEK(cat->file, pos, SEEK_SET, cat->filename);
-
-  free(buf);
-
-  return;
-  }
-
-
-/****** print_obj *************************************************************
-PROTO	void print_obj(FILE *stream, tabstruct *tab)
-PURPOSE	Print one individual source to the output stream.
-INPUT	Output stream
-	Table structure.
-OUTPUT	-.
-NOTES	-.
-AUTHOR	E. Bertin (IAP & Leiden observatory)
-VERSION	13/06/2012
- ***/
-void	print_obj(FILE *stream, tabstruct *tab)
-
-  {
-   keystruct	*key;
-   char		*ptr;
-   int		i,k, esize;
-
-  if (!(key = tab->key))
-    error(EXIT_FAILURE, "*Error*: no key to print in table ", tab->extname);
-
-  for (k=tab->nkey; k--; key = key->nextkey)
-    {
-    esize = t_size[key->ttype];
-    ptr = key->ptr;
-    for (i = key->nbytes/esize; i--; ptr += esize)
-      switch(key->ttype)
-        {
-        case T_FLOAT:
-          fprintf(stream, *key->printf?key->printf:"%g", *(float *)ptr);
-          if (i)
-            putc(' ', stream);
-          break;
-        case T_DOUBLE:
-          fprintf(stream, *key->printf?key->printf:"%f", *(double *)ptr);
-          if (i)
-            putc(' ', stream);
-          break;
-        case T_SHORT:
-          fprintf(stream, *key->printf?key->printf:"%d", *(short *)ptr);
-          if (i)
-            putc(' ', stream);
-          break;
-        case T_LONG:
-          fprintf(stream, *key->printf?key->printf:"%d", *(int *)ptr);
-          if (i)
-            putc(' ', stream);
-          break;
-        case T_LONGLONG:
-          fprintf(stream, *key->printf?key->printf:"%lld", *(SLONGLONG *)ptr);
-          if (i)
-            putc(' ', stream);
-          break;
-        case T_BYTE:
-          if (key->htype==H_BOOL)
-            {
-            if (*ptr)
-              fprintf(stream, "T");
-            else
-              fprintf(stream, "F");
-            }
-          else
-            fprintf(stream, *key->printf?key->printf:"%d", (int)*ptr);
-          if (i)
-            putc(' ', stream);
-          break;
-        case T_STRING:
-          fprintf(stream, "%c", (int)*ptr);
-          break;
-        default:
-          error(EXIT_FAILURE, "*FATAL ERROR*: Unknown FITS type in ",
-		"print_obj()");
-        }
-    if (k)
-      putc(' ', stream);
-    }
-
-  putc('\n', stream);
-
-  return;
-  }
-
-
-/****** voprint_obj ***********************************************************
-PROTO	void voprint_obj(FILE *stream, tabstruct *tab)
-PURPOSE	Print one individual source to the output stream in VOTable format
-INPUT	Output stream
-	Table structure.
-OUTPUT	-.
-NOTES	-.
-AUTHOR	G. Tissier (IAP) & E.Bertin (CEA/AIM/UParisSaclay)
-VERSION	11/10/2024
- ***/
-void	voprint_obj(FILE *stream, tabstruct *tab)
-
-  {
-   keystruct	*key;
-   char		*ptr;
-   int		i,k, esize;
-
-  if (!(key = tab->key))
-    error(EXIT_FAILURE, "*Error*: no key to print in table ", tab->extname);
-
-  fprintf(stream, "    <TR>");
-
-  for (k=tab->nkey; k--; key = key->nextkey)
-    {
-    fprintf(stream, "<TD>");
-
-    esize = t_size[key->ttype];
-    ptr = key->ptr;
-    for (i = key->nbytes/esize; i--; ptr += esize)
-      switch(key->ttype)
-        {
-        case T_FLOAT:
-          fprintf(stream, *key->printf?key->printf:"%g", *(float *)ptr);
-          if (i)
-            putc(' ', stream);
-          break;
-        case T_DOUBLE:
-          fprintf(stream, *key->printf?key->printf:"%f", *(double *)ptr);
-          if (i)
-            putc(' ', stream);
-          break;
-        case T_SHORT:
-          fprintf(stream, *key->printf?key->printf:"%d", *(short *)ptr);
-          if (i)
-            putc(' ', stream);
-          break;
-        case T_LONG:
-          fprintf(stream, *key->printf?key->printf:"%d", *(int *)ptr);
-          if (i)
-            putc(' ', stream);
-          break;
-        case T_LONGLONG:
-          fprintf(stream, *key->printf?key->printf:"%lld", *(SLONGLONG *)ptr);
-          if (i)
-            putc(' ', stream);
-          break;
-        case T_BYTE:
-          if (key->htype==H_BOOL)
-            {
-            if (*ptr)
-              fprintf(stream, "T");
-            else
-              fprintf(stream, "F");
-            }
-          else
-            fprintf(stream, *key->printf?key->printf:"%d", (int)*ptr);
-          if (i)
-            putc(' ', stream);
-          break;
-        case T_STRING:
-          fprintf(stream, "%c", (int)*ptr);
-          break;
-        default:
-          error(EXIT_FAILURE, "*FATAL ERROR*: Unknown FITS type in ",
-		"voprint_obj()");
-        }
-
-    fprintf(stream, "</TD>");
-    }
-
-  fprintf(stream, "</TR>\n");
-
-  return;
-  }

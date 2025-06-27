@@ -33,6 +33,7 @@
 *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
 #include <stdio.h>
+#include "wcslib/wcs.h"
 
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
@@ -233,7 +234,6 @@ extern void	add_cleanupfilename(char *filename),
 		copy_tab_fromptr(tabstruct *tabin, catstruct *catout, int pos),
 		encode_checksum(unsigned int sum, char *str),
 		end_readobj(tabstruct *keytab, tabstruct *tab, char *buf),
-		end_writeobj(catstruct *cat, tabstruct *tab, char *buf),
 		error(int code, const char *msg1, const char *msg2),
 		error_installfunc(void (*func)(const char *msg1, const char *msg2)),
 		fixexponent(char *s),
@@ -241,17 +241,14 @@ extern void	add_cleanupfilename(char *filename),
 		free_cat(catstruct **cat, int ncat),
 		free_key(keystruct *key),
 		free_tab(tabstruct *tab),
-		init_writeobj(catstruct *cat, tabstruct *tab, char **pbuf),
 		install_cleanup(void (*func)(void)),
-		print_obj(FILE *stream, tabstruct *tab),
 		read_keys(tabstruct *tab, char **keynames, keystruct **keys,
 			int nkeys, unsigned char *mask),
-		read_basic(tabstruct *tab),
 		read_body(tabstruct *tab, PIXTYPE *ptr, size_t size),
 		read_ibody(tabstruct *tab, FLAGTYPE *ptr, size_t size),
 		readbasic_head(tabstruct *tab),
 		remove_cleanupfilename(char *filename),
-		save_cat(catstruct *cat, char *filename),
+		save_cat(catstruct *cat, char *filename, struct wcsprm * wcs),
 		save_tab(catstruct *cat, tabstruct *tab),
 		show_keys(tabstruct *tab, char **keynames, keystruct **keys,
 			int nkeys, unsigned char *mask, FILE *stream,
@@ -260,9 +257,7 @@ extern void	add_cleanupfilename(char *filename),
 		swapbytes(void *, int, int),
 		ttypeconv(void *ptrin, void *ptrout,
 			t_type ttypein, t_type ttypeout),
-		voprint_obj(FILE *stream, tabstruct *tab),
 		warning(char *, char *),
-		write_body(tabstruct *tab, PIXTYPE *ptr, size_t size),
 		write_ibody(tabstruct *tab, FLAGTYPE *ptr, size_t size),
 		write_checksum(tabstruct *tab);
 
@@ -275,8 +270,7 @@ extern char	*tdisptoprintf(char *tdisp, char *str),
 
 extern unsigned int
 		compute_blocksum(char *buf, unsigned int sum),
-		compute_bodysum(tabstruct *tab, unsigned int sum),
-		decode_checksum(char *str);
+		compute_bodysum(tabstruct *tab, unsigned int sum);
 
 extern int	about_cat(catstruct *cat, FILE *stream),
 		about_tab(catstruct *cat, char *tabname, FILE *stream),
@@ -328,14 +322,10 @@ extern int	about_cat(catstruct *cat, FILE *stream),
 		remove_tab(catstruct *cat, char *tabname, int seg),
 		remove_tabs(catstruct *cat),
 		save_head(catstruct *cat, tabstruct *tab),
-		set_maxram(size_t maxram),
-		set_maxvram(size_t maxvram),
-		set_swapdir(char *dirname),
 		tab_row_len(char *, char *),
 		tformof(char *str, t_type ttype, int n),
 		tsizeof(char *str),
 		update_head(tabstruct *tab),
-		decomp_head(tabstruct *tab),
 		update_tab(tabstruct *tab),
 		verify_checksum(tabstruct *tab),
 		write_obj(tabstruct *tab, char *buf),

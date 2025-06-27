@@ -26,5 +26,5 @@
 #
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-dist_man_MANS = sky.1 sky.x
+dist_man_MANS = sky.1 TwoMassToSky.1 mergeFHdr.1
 

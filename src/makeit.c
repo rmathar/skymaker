@@ -54,22 +54,34 @@
 
 char		gstr[MAXCHAR];
 
+/****** counter_seconds *******************************************************
+PROTO	double counter_seconds(void)
+PURPOSE	Count the number of seconds (with an arbitrary offset).
+INPUT	-.
+OUTPUT	Returns a number of seconds.
+NOTES	Results are meaningful only for tasks that take one microsec or more.
+AUTHOR	E. Bertin (IAP)
+VERSION	24/09/2009
+ ***/
+static double	counter_seconds(void)
+  {
+   struct timeval	tp;
+   struct timezone	tzp;
+
+  gettimeofday(&tp,&tzp);
+  return (double) tp.tv_sec + (double) tp.tv_usec * 1.0e-6;
+  }
+
 /******************************** makeit *************************************/
 /*
 Manage the whole stuff.
 */
 void    makeit() {
 
-   keystruct    *key;
-   tabstruct    *tab;
    simstruct	*simul;
    time_t	thetime, thetime2;
    struct tm	*tm;
    double	dtime;
-
-/* Dummy add_key() call to get around stupid INTEL OneAPI compiler bug */
-  add_key(key=new_key("DUMMY"), tab=new_tab("dummy"), 0);
-  free_tab(tab);
 
 /* Processing start date and time */
   thetime = time(NULL);
@@ -163,27 +175,4 @@ void    makeit() {
         tm->tm_hour, tm->tm_min, tm->tm_sec);
   prefs.time_diff = counter_seconds() - dtime;
 
-  return;
-  }
-
-
-/****** counter_seconds *******************************************************
-PROTO	double counter_seconds(void)
-PURPOSE	Count the number of seconds (with an arbitrary offset).
-INPUT	-.
-OUTPUT	Returns a number of seconds.
-NOTES	Results are meaningful only for tasks that take one microsec or more.
-AUTHOR	E. Bertin (IAP)
-VERSION	24/09/2009
- ***/
-double	counter_seconds(void)
-  {
-   struct timeval	tp;
-   struct timezone	tzp;
-   int			dummy;
-
-  dummy = gettimeofday(&tp,&tzp);
-  return (double) tp.tv_sec + (double) tp.tv_usec * 1.0e-6;
-  }
-
-
+  } /* makeit */

@@ -159,7 +159,7 @@ NOTES	-.
 AUTHOR	E. Bertin (IAP)
 VERSION	11/03/2011
  ***/
-int	imaout_readaschead(char *filename, int frameno, tabstruct *tab)
+static int	imaout_readaschead(char *filename, int frameno, tabstruct *tab)
   {
    char		keyword[88],data[88],comment[88], str[88];
    FILE		*file;
@@ -213,6 +213,7 @@ OUTPUT	Pointer to the initialized FITScat structure.
 NOTES	-.
 AUTHOR	E. Bertin (IAP)
 VERSION	01/12/2020
+RJM how can we manage that the simwcsflag is 
  ***/
 catstruct	*imaout_inithead(simstruct *sim)
 
@@ -364,9 +365,12 @@ void	imaout_write(simstruct *sim) {
       tab->tabsize *= (tab->naxisn[3] = sim->imasize[3]);
   }
 
-  save_cat(sim->cat, sim->filename);
+  /* at this point sim->wcs usually is a NULL pointer, so sim->wcs->wcsprm is not available
+  save_cat(sim->cat, sim->filename, sim->wcs->wcsprm);
+  */
+  if ( sim-> wcs)
+	  save_cat(sim->cat, sim->filename, sim->wcs->wcsprm);
+  else
+	  save_cat(sim->cat, sim->filename, NULL);
   sim->cat->tab->bodybuf = NULL;
-
-  return;
 }
-

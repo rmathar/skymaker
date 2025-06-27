@@ -22,25 +22,32 @@
 #	You should have received a copy of the GNU General Public License
 #	along with SkyMaker. If not, see <http://www.gnu.org/licenses/>.
 #
-#	Last modified:		05/05/2020
+#	Last modified:		2025-06-26
 #
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-SUBDIRS		= fits wcs
+SUBDIRS		= fits
 
-bin_PROGRAMS	= sky
+bin_PROGRAMS	= sky TwoMassToSky
+
+dist_bin_SCRIPTS = mergeFHdr.py
 
 sky_SOURCES	= alterimage.c corr.c fft.c fitswcs.c galaxies.c image.c \
-		  imaout.c list.c main.c makeit.c noise.c poly.c prefs.c psf.c \
+		  imaout.c list.c sky.c makeit.c noise.c poly.c prefs.c psf.c \
 		  random.c rasters.c simul.c stars.c weight.c \
 		  alterimage.h corr.h define.h fft.h fitswcs.h galaxies.h \
 		  globals.h image.h imaout.h key.h list.h noise.h poly.h \
 		  preflist.h prefs.h psf.h random.h rasters.h simul.h stars.h \
 		  threads.h \
-		  types.h wcscelsys.h weight.h
+		  wcscelsys.h weight.h
+# sky_CFLAGS = -E -Wall $(AM_CFLAGS)
+sky_CFLAGS = -Wall $(AM_CFLAGS)
 
-sky_LDADD	= $(srcdir)/fits/libfits.a \
-		  $(srcdir)/wcs/libwcs_c.a
+sky_LDADD	= $(srcdir)/fits/libfits.a @PTHREAD_LIBS@
+
+TwoMassToSky_SOURCES	= TwoMassToSky.cxx TwoMassToSky.h
+TwoMassToSky_CXXFLAGS = -Wall $(AM_CXXFLAGS)
+TwoMassToSky_LDADD = 
 
 DATE=`date +"%Y-%m-%d"`
 

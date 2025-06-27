@@ -46,12 +46,11 @@
   #include MKL_H
 #endif
 
-#ifdef USE_THREADS
+#ifdef HAVE_OPENMP
   #include <omp.h>
 #endif
 
 #include "define.h"
-#include "types.h"
 #include "globals.h"
 #include "corr.h"
 #include "fft.h"
@@ -175,7 +174,7 @@ VERSION	09/04/2018
  ***/
 void	noise_generateline(simstruct *sim, int y) {
 
-   PIXTYPE		*pix, *imapix, *noisepix, *rmspix,
+   PIXTYPE		*imapix, *noisepix, *rmspix,
 			ron;
    int			i, p, npix;
 
@@ -185,7 +184,7 @@ void	noise_generateline(simstruct *sim, int y) {
    float		*gaussbuf;
 #endif
 
-#ifdef USE_THREADS
+#ifdef HAVE_OPENMP
   p = omp_get_thread_num();
 #else
   p = 0;

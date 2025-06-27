@@ -1,3 +1,4 @@
+#pragma once
 /*
 *				simul.h
 *
@@ -26,16 +27,9 @@
 *
 *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
-#ifndef _SIMUL_H_
-#define _SIMUL_H_
-
-#ifndef _FITSCAT_H_
 #include "fits/fitscat.h"
-#endif
 
-#ifndef _FITSWCS_H_
 #include "fitswcs.h"
-#endif
 
 /*----------------------------- Internal constants --------------------------*/
 #define	PSF_INTERPW	2		/* Footprint of PSF interpolant */
@@ -187,5 +181,3 @@ typedef struct
 extern simstruct	*sim_init(void);
 
 extern void		sim_end(simstruct *sim);
-
-#endif

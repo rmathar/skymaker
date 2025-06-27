@@ -1,3 +1,4 @@
+#pragma once
 /*
 *				list.h
 *
@@ -26,12 +27,8 @@
 *
 *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
-#ifndef _SIMUL_H_
 #include "simul.h"
-#endif
 
-#ifndef _LIST_H_
-#define _LIST_H_
 /*------------------------------ Internal constants -------------------------*/
 
 #define	READLIST_DISPSTEP	5000
@@ -86,4 +83,3 @@ extern void		list_closeout(simstruct *sim),
 			list_writeobj(simstruct *sim, objstruct *obj);
 extern int		list_readobj(simstruct *sim, objstruct *obj, char *str,
 				int proc);
-#endif

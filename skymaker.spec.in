@@ -42,6 +42,7 @@ License: GPL v3+
 Group: Sciences/Astronomy
 BuildRoot: %{_tmppath}/%{name}-buildroot
 BuildRequires: pkgconfig
+BuildRequires: cfitsio
 BuildRequires: fftw-devel >= 3.1
 
 %description
@@ -52,11 +53,11 @@ SkyMaker is a program that simulates astronomical images in FITS format.
 
 %build
 if test "$USE_BEST"; then
-%configure --enable-mkl --enable-auto-flags --enable-best-link --with-release=@PACKAGE_RELEASE@
+%configure --enable-mkl --enable-auto-flags --enable-best-link --with-release=@PACKAGE_RELEASE@ --with-cfitsio
 elif test "$USE_ICC"; then
-%configure --enable-icc --with-release=@PACKAGE_RELEASE@
+%configure --enable-icc --with-release=@PACKAGE_RELEASE@ --with-cfitsio
 else
-%configure --with-release=@PACKAGE_RELEASE@
+%configure --with-release=@PACKAGE_RELEASE@ --with-cfitsio
 fi
 make %{?_smp_mflags}
 

@@ -61,8 +61,6 @@
 extern pthread_mutex_t	fftmutex;
 #endif
 
-static double	gamm(double xx);
-
 /****** make_raster *******************************************************
 PROTO	int make_raster(simstruct *sim, objstruct *obj)
 PURPOSE	Render a raster at a definite position in the image.
@@ -86,7 +84,7 @@ int	make_raster(simstruct *sim, objstruct *obj) {
 		flux, flux2, dx,dy, scale, expo, n, dval;
    int		i, i11,i12,i21,i22, lng, lat, subwidth,subheight, suborder,
 		rasterwidth, rasterheight, rastersize,
-		nsub, nsub2, nsubo, memnsub, oversamp;
+		nsub2, nsubo, memnsub, oversamp;
 
   osamp = sim->psfoversamp;
   size = obj->raster_size / sim->pixscale[0];
@@ -141,7 +139,6 @@ int	make_raster(simstruct *sim, objstruct *obj) {
     suborder = PSF_NORDER;
   }
   subheight = subwidth = 1<<suborder;
-  nsub = subwidth*subheight;
   memnsub = (((subwidth>>1) + 1)<< 1) * subheight; // Provide margin for FFTW
 
 // Compute (or retrieve) PSF DFT at this position

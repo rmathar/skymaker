@@ -42,12 +42,7 @@
 #define	THREAD_NMAX 16
 #endif
 
-#ifdef	HAVE_LGAMMA_R
 #define	LOGGAMMA(x)	lgamma_r(x,&signp)	/* Generally slower */
-#else
-#define	LOGGAMMA	gammln
-static double		gammln();
-#endif
 
 #ifdef USE_THREADS
 static unsigned int	glob_seed[THREADS_NMAX];
@@ -147,34 +142,6 @@ void	init_random(int seed)
   }
 
 
-/****i* gammln ***************************************************************
-PROTO   double gammln(double xx)
-PURPOSE Returns the log of the Gamma function (based on algorithm described in
-	Numerical Recipes in C, chap 6.1).
-INPUT   A double.
-OUTPUT  Log of the Gamma function.
-NOTES   -.
-AUTHOR  E. Bertin (IAP)
-VERSION 12/10/2010
-*/
-static double	gammln(double xx)
-
-  {
-   double		x,tmp,ser;
-   static double	cof[6]={76.18009173,-86.50532033,24.01409822,
-			-1.231739516,0.120858003e-2,-0.536382e-5};
-   int			j;
-
-  tmp=(x=xx-1.0)+5.5;
-  tmp -= (x+0.5)*log(tmp);
-  ser=1.0;
-  for (j=0;j<6;j++)
-    ser += cof[j]/(x+=1.0);
-
-  return log(2.50662827465*ser)-tmp;
-  }
-
-
 /****** random_poisson *******************************************************
 PROTO   double random_poisson(double xm, int p)
 PURPOSE Returns a random number with Poisson deviate (based on algorithm
@@ -221,7 +188,7 @@ double	random_poisson(double xm, int p)
       {
       do
         {
-        y=tan(PI*random_double(p));
+        y=tan(M_PI*random_double(p));
         em=sq*y+xm;
         } while (em < 0.0);
       em=floor(em);

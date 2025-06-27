@@ -1,3 +1,4 @@
+#pragma once
 /*
 *				imaout.h
 *
@@ -26,17 +27,11 @@
 *
 *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
-#ifndef _FITSCAT_H_
 #include "fits/fitscat.h"
-#endif
 
-#ifndef _PREFS_H_
 #include "prefs.h"
-#endif
 
-#ifndef _SIMUL_H_
 #include "simul.h"
-#endif
 
 extern char	prefsname[MAXCHAR];
 
@@ -53,9 +48,7 @@ typedef struct structheadkey
   }             headkeystruct;
 
 /*---------------------------------- protos --------------------------------*/
-catstruct	*imaout_inithead(simstruct *sim);
-
-int		imaout_readaschead(char *filename, int frameno, tabstruct *tab);
+catstruct       *imaout_inithead(simstruct *sim);
 
 void		imaout_write(simstruct *sim);
 

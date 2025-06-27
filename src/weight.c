@@ -63,10 +63,7 @@ int	weight_load(simstruct *sim) {
 		weight_fac, weight_thresh, minval;
    char		lstr[MAXCHAR],
 		*filename, *rfilename, *str,*str2;
-   weightenum	wtype;
    int		p, npix;
-
-  wtype = prefs.weight_type;
 
   filename = prefs.weight_name;
   if ((str = strrchr(filename, '['))) {

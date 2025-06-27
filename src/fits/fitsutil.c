@@ -571,8 +571,7 @@ int	fitswrite(char *fitsbuf, char *keyword, void *ptr, h_type htype,
 			break;
 
     default:		error(EXIT_FAILURE,
-				"*FATAL ERROR*: Unknown FITS type in ",
-				"fitswrite()");
+				"*FATAL ERROR*: Unknown FITS type in ", __func__);
 			break;
     }
 

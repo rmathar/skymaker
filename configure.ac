@@ -50,13 +50,10 @@ AC_SUBST(DATE1, "$date1")
 AC_SUBST(DATE2, "$date2")
 AC_SUBST(DATE3, "$date3")
 
-# Include macros
-sinclude(acx_fftw.m4)
-sinclude(acx_mkl.m4)
-sinclude(acx_cfitsio.m4)
-sinclude(acx_prog_cc_optim.m4)
-sinclude(acx_pthread.m4)
-sinclude(ax_openmp.m4)
+# Checks for programs.
+# AC_LANG(C)
+AC_PROG_CC
+AC_PROG_CXX
 
 # Provide a special option for setting the package release number
 AC_ARG_WITH(release,
@@ -114,9 +111,6 @@ AC_ARG_ENABLE(mkl,
         enable_iccx="yes",
 	AC_MSG_RESULT([no]))
 
-# Checks for programs.
-AC_LANG(C)
-
 AC_SEARCH_LIBS([strerror],[cposix])
 if test "$enable_auto_flags" = "yes"; then
   CFLAGS=""
@@ -128,6 +122,14 @@ AC_PROG_INSTALL
 
 # Checks for libraries.
 AC_CHECK_LIB(m, sin)
+# the Calabretta wcslib
+AC_CHECK_LIB([wcs], [wcsinit],[],[],[-lwcs])
+
+AC_CHECK_HEADERS([wcslib/wcs.h],[],[
+AC_MSG_ERROR([Error: Could  not find header wcslib/wcs.h ... aborting...])
+])
+
+
 
 # Checks for header files.
 AC_CHECK_HEADERS([limits.h malloc.h stdlib.h string.h sys/mman.h \
@@ -223,6 +225,8 @@ the executable as portable as possible (default = no)])],
 	AC_MSG_RESULT([yes]),
 	AC_MSG_RESULT([no]))
 
+ AX_OPENMP
+
 ################# Actions to complete in case of multhreading ################
 AC_DEFINE_UNQUOTED(THREADS_NMAX, $n_pthreads,[Maximum number of POSIX threads])
 if test "$use_pthreads" = "yes"; then
@@ -231,9 +235,9 @@ if test "$use_pthreads" = "yes"; then
   AC_DEFINE(USE_THREADS, 1, [Triggers multhreading])
 # CC, CFLAGS and LIBS are system and compiler-dependent
   ACX_PTHREAD
-  AX_OPENMP
   CC="$PTHREAD_CC"
   [AM_CFLAGS="$AM_CFLAGS $OPENMP_CFLAGS $PTHREAD_CFLAGS -D_REENTRANT"]
+  [AM_CXXFLAGS="$AM_CXXFLAGS $OPENMP_CFLAGS $PTHREAD_CFLAGS"]
   LIBS="$LIBS $PTHREAD_LIBS"
 fi
 AM_CONDITIONAL(USE_THREADS, test $use_pthreads = "yes")
@@ -294,6 +298,7 @@ if test "$enable_best_link" = "yes"; then
 fi
 
 AC_SUBST(AM_CFLAGS)
+AC_SUBST(AM_CXXFLAGS)
 AC_SUBST(AM_CPPFLAGS)
 AC_SUBST(AM_LDFLAGS)
 
@@ -315,6 +320,5 @@ man/Makefile
 man/sky.1
 src/Makefile
 src/fits/Makefile
-src/wcs/Makefile
 ])
 AC_OUTPUT

@@ -181,8 +181,6 @@ void    swapbytes(void *ptr, int nb, int n)
     }
 
   error(EXIT_FAILURE, "*Internal Error*: Unknown size in ", "swapbytes()");
-
-  return;
   }
 
 

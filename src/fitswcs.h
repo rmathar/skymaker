@@ -1,3 +1,4 @@
+#pragma once
 /*
 *				fitswcs.h
 *
@@ -27,16 +28,13 @@
 *
 *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
-#ifndef _FITSWCS_H_
-#define _FITSWCS_H_
-
 /*-------------------------------- macros -----------------------------------*/
 
 /*----------------------------- Internal constants --------------------------*/
 
 #define		NAXIS	2		/* Max number of FITS axes */
 
-#define		DEG	(PI/180.0)	/* 1 deg in radians */
+#define		DEG	(M_PI/180.0)	/* 1 deg in radians */
 #define		ARCMIN	(DEG/60.0)	/* 1 arcsec in radians */
 #define		ARCSEC	(DEG/3600.0)	/* 1 arcsec in radians */
 #define		MAS	(ARCSEC/1000.0)	/* 1 mas in radians */
@@ -102,69 +100,32 @@ typedef struct wcs
   double	celsysmat[4];		/* Equ. <=> Cel. system parameters */
   int		celsysconvflag;		/* Equ. <=> Cel. conversion needed? */
   struct wcsprm	*wcsprm;		/* WCSLIB's wcsprm structure */
-  struct linprm	*lin;			/* WCSLIB's linprm structure */
-  struct celprm	*cel;			/* WCSLIB's celprm structure */
-  struct prjprm *prj;			/* WCSLIB's prjprm structure */
-  struct tnxaxis *tnx_latcor;		/* IRAF's TNX latitude corrections */
-  struct tnxaxis *tnx_lngcor;		/* IRAF's TNX longitude corrections */
-  struct poly	*inv_x;			/* Proj. correction polynom in x */
-  struct poly	*inv_y;			/* Proj. correction polynom in y */
   }	wcsstruct;
 
 /*------------------------------- functions ---------------------------------*/
 
 extern wcsstruct	*create_wcs(char **ctype, double *crval, double *crpix,
 				double *cdelt, int *naxisn, int naxis),
-			*copy_wcs(wcsstruct *wcsin),
 			*read_wcs(tabstruct *tab);
 
 extern double		fmod_0_p360(double angle),
-			fmod_m90_p90(double angle),
-			sextodegal(char *hms),
-			sextodegde(char *dms),
 			wcs_dist(wcsstruct *wcs,
 				double *wcspos1, double *wcspos2),
 			wcs_jacobian(wcsstruct *wcs, double *pixpos,
-				double *jacob),
-			wcs_rawtoraw(wcsstruct *wcsin, wcsstruct *wcsout,
-				double *pixposin, double *pixposout,
 				double *jacob),
 			wcs_scale(wcsstruct *wcs, double *pixpos);
 
 extern int		celsys_to_eq(wcsstruct *wcs, double *wcspos),
 			eq_to_celsys(wcsstruct *wcs, double *wcspos),
-			fcmp_0_p360(double anglep, double anglem),
-			frame_wcs(wcsstruct *wcsin, wcsstruct *wcsout),
-			raw_to_red(wcsstruct *wcs,
-				double *pixpos, double *redpos),
 			raw_to_wcs(wcsstruct *wcs,
 				double *pixpos, double *wcspos),
-			reaxe_wcs(wcsstruct *wcs, int lng, int lat),
-			red_to_raw(wcsstruct *wcs,
-				double *redpos, double *pixpos),
 			wcs_chirality(wcsstruct *wcs),
 			wcs_supproj(char *name),
 			wcs_to_raw(wcsstruct *wcs,
 				double *wcspos, double *pixpos);
 
-extern char		*degtosexal(double alpha, char *str),
-			*degtosexde(double delta, char *str);
 
-extern void		b2j(double yearobs, double alphain, double deltain,
-				double *alphaout, double *deltaout),
-			end_wcs(wcsstruct *wcs),
+extern void		end_wcs(wcsstruct *wcs),
 			init_wcs(wcsstruct *wcs),
 			init_wcscelsys(wcsstruct *wcs),
-			invert_wcs(wcsstruct *wcs),
-			j2b(double yearobs, double alphain, double deltain,
-				double *alphaout, double *deltaout),
-			precess(double yearin, double alphain, double deltain,
-				double yearout,
-				double *alphaout, double *deltaout),
-			precess_wcs(wcsstruct *wcs, double yearin,
-				double yearout),
-			range_wcs(wcsstruct *wcs),
-			wipe_wcs(tabstruct *tab),
-			write_wcs(tabstruct *tab, wcsstruct *wcs);
-
-#endif
+			range_wcs(wcsstruct *wcs);

@@ -1,3 +1,4 @@
+#pragma once
 /*
 *				image.h
 *
@@ -26,12 +27,8 @@
 *
 *%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
-#ifndef _FITSCAT_H_
 #include "fits/fitscat.h"
-#endif
-#ifndef _LIST_H_
 #include "list.h"
-#endif
 
 /*----------------------------- Internal constants --------------------------*/
 

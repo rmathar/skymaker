@@ -57,7 +57,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'SkyMaker'
+project = 'SkyMaker'
 filename = 'skymaker'
 copyright = u'2017, IAP/CNRS/UPMC'
 author = u'S. Carassou, E. Bertin'
@@ -81,7 +81,7 @@ language = None
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
 #
-today = 'Wed Apr 02 2025'
+today = 'Fri Jun 27 2025'
 #
 # Else, today_fmt is used as the format for a strftime call.
 #
@@ -263,7 +263,7 @@ latex_elements = {
 
      # Additional stuff for the LaTeX preamble.
      #
-'preamble': '\usepackage{amssymb}',
+'preamble': '\\usepackage{amssymb}',
 
      # Latex figure (float) alignment
      #
@@ -274,7 +274,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, filename + '.tex', project + u' Documentation',
+    (master_doc, filename + '.tex', project + ' Documentation',
      author, 'manual'),
 ]
 
@@ -316,7 +316,7 @@ latex_show_urls = 'footnote'
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, filename, project + u' Documentation',
+    (master_doc, filename, project + ' Documentation',
      author, 1)
 ]
 
@@ -331,7 +331,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, filename, project + u' Documentation',
+    (master_doc, filename, project + ' Documentation',
      author, project, 'One line description of project.',
      'Miscellaneous'),
 ]
